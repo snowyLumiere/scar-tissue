@@ -1,0 +1,15 @@
+# Exclude Python caches, test suites, and local state from npm tarball
+**/__pycache__/
+**/*.py[cod]
+**/*.pyo
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.scartissue/
+.scartissue_tmp/
+tests/
+benchmarks/
+reports/
+.git/
+.DS_Store
+*.tgz

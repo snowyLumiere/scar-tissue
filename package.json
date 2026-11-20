@@ -1,0 +1,38 @@
+{
+  "name": "scar-tissue-mcp",
+  "version": "0.1.0",
+  "description": "Anti-Memory MCP Server for Claude Code / Cursor / Codex — Stop AI agents from repeating reverted git commits and test crash loops.",
+  "license": "Apache-2.0",
+  "author": "SnowyLumiere",
+  "homepage": "https://github.com/SnowyLumiere/scar-tissue#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/SnowyLumiere/scar-tissue.git"
+  },
+  "bugs": {
+    "url": "https://github.com/SnowyLumiere/scar-tissue/issues"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "bin": {
+    "scar-tissue-mcp": "./bin/scar-tissue.js",
+    "scar-tissue": "./bin/scar-tissue.js"
+  },
+  "files": [
+    "bin/",
+    "scar_tissue/*.py",
+    "pyproject.toml",
+    "README.md",
+    "LICENSE"
+  ],
+  "keywords": [
+    "mcp",
+    "agent-memory",
+    "anti-memory",
+    "claude-code",
+    "cursor",
+    "memorilla",
+    "scar-tissue"
+  ]
+}

@@ -1,0 +1,64 @@
+[build-system]
+requires = ["setuptools>=77.0.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "scar-tissue"
+version = "0.1.0"
+description = "ScarTissue: Anti-Memory MCP Server & Git/Test Hook Gatekeeper that prevents AI Coding Agents from repeating dead-end code changes."
+readme = "README.md"
+requires-python = ">=3.10"
+license = "Apache-2.0"
+license-files = ["LICENSE"]
+authors = [
+    {name = "SnowyLumiere"},
+]
+keywords = [
+    "mcp",
+    "agent-memory",
+    "anti-memory",
+    "claude-code",
+    "cursor",
+    "git-hooks",
+    "scar-tissue",
+]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Environment :: Console",
+    "Intended Audience :: Developers",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Topic :: Software Development :: Quality Assurance",
+    "Topic :: Software Development :: Version Control :: Git",
+]
+dependencies = [
+    "mcp>=1.0.0,<2.0.0",
+    "pydantic>=2.0.0",
+]
+
+[project.urls]
+Homepage = "https://github.com/SnowyLumiere/scar-tissue"
+Repository = "https://github.com/SnowyLumiere/scar-tissue"
+Issues = "https://github.com/SnowyLumiere/scar-tissue/issues"
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=7.0.0",
+    "pytest-asyncio>=0.21.0",
+]
+
+[project.scripts]
+scar-tissue = "scar_tissue.cli:main"
+scar-tissue-mcp = "scar_tissue.server:main"
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["scar_tissue*"]
+
+[tool.pytest.ini_options]
+pythonpath = ["."]
+asyncio_default_fixture_loop_scope = "function"

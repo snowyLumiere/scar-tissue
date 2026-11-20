@@ -1,0 +1,71 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  python:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        python-version: ["3.10", "3.11", "3.12"]
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+
+      - name: Install package & dev dependencies
+        run: python -m pip install --upgrade pip && python -m pip install ".[dev]"
+
+      - name: Run pytest suite
+        run: pytest -v
+
+      - name: Run benchmarks
+        run: |
+          PYTHONPATH=. python benchmarks/evaluate_real_oss_commits.py > /dev/null
+          PYTHONPATH=. python benchmarks/evaluate_5_scenarios.py > /dev/null
+
+      - name: Build wheel & run outside-repo smoke test
+        run: |
+          python -m pip wheel --no-deps -w /tmp/dist .
+          python -m venv /tmp/smoke-venv
+          /tmp/smoke-venv/bin/python -m pip install /tmp/dist/scar_tissue-*.whl
+          mkdir -p /tmp/smoke-dir
+          cd /tmp/smoke-dir
+          /tmp/smoke-venv/bin/scar-tissue --version
+          /tmp/smoke-venv/bin/scar-tissue --help > /dev/null
+          /tmp/smoke-venv/bin/python -m scar_tissue --version
+          /tmp/smoke-venv/bin/scar-tissue list --repo /tmp/smoke-dir
+          test ! -e /tmp/smoke-dir/.scartissue
+          /tmp/smoke-venv/bin/scar-tissue record --repo /tmp/smoke-dir --file app/main.py \
+            --attempted "call proc.wait()" --cause "pipe deadlock" \
+            --dead-end "proc.wait()" --pivot "proc.communicate()" > /dev/null
+          /tmp/smoke-venv/bin/scar-tissue check app/main.py --repo /tmp/smoke-dir --plan "proc.wait" > /dev/null
+
+  npm-package:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+
+      - uses: astral-sh/setup-uv@v4
+
+      - name: Pack npm tarball and smoke test from read-only directory
+        run: |
+          mkdir -p /tmp/npm-pkg /tmp/npm-unpacked
+          npm pack --pack-destination /tmp/npm-pkg
+          tar -xzf /tmp/npm-pkg/scar-tissue-mcp-*.tgz -C /tmp/npm-unpacked
+          chmod -R a-w /tmp/npm-unpacked/package
+          cd /tmp
+          node /tmp/npm-unpacked/package/bin/scar-tissue.js --version
+          node /tmp/npm-unpacked/package/bin/scar-tissue.js --help > /dev/null
+          chmod -R u+w /tmp/npm-unpacked/package

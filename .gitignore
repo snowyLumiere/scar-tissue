@@ -1,0 +1,26 @@
+# Python caches & build artifacts
+__pycache__/
+*.py[cod]
+*$py.class
+*.egg-info/
+.eggs/
+dist/
+build/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.venv/
+venv/
+uv.lock
+
+# ScarTissue local SQLite / test streak runtime state (scars.jsonl may be tracked if desired)
+.scartissue/scars.db
+.scartissue/scars.db-wal
+.scartissue/scars.db-shm
+.scartissue/test_streak.json
+.scartissue_tmp/
+
+# npm / OS artifacts
+node_modules/
+*.tgz
+.DS_Store
